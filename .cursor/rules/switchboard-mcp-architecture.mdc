@@ -1,0 +1,23 @@
+---
+description: What switchboard-mcp is and the boundaries to keep
+globs: src/**,package.json
+alwaysApply: false
+---
+
+# switchboard-mcp architecture
+
+A local stdio MCP server wrapping the `@ruban24/switchboard` library (Apache-2.0).
+One tool, `route_task(task)`, returns `{alias, model, effort, ...}` for spawning subagents.
+
+*   **Wrap, don't fork.** Routing, policy merging and classification come from
+    `@ruban24/switchboard`. Don't copy its source; if you must, keep the Apache-2.0
+    notice and credit `ruban-24` in `NOTICE`.
+*   **Local only.** No hosting, auth, or shared state. The only data leaving the machine is
+    task text sent to the classifier.
+*   **Secrets via env only** (`JEV_API_KEY`, `TYPESAFE_API_KEY`, `SWITCHBOARD_*`). Never write
+    keys to files, logs, tool output or commits.
+*   **stdout is the protocol.** Log to stderr only.
+*   **Policy** is read from `$SWITCHBOARD_POLICY` or `~/.config/switchboard/policy.json` and merged
+    over `defaultPolicy`. `alias` maps model IDs to `haiku|sonnet|opus|fable` for the Agent tool.
+*   **Node >= 22.18**, TypeScript run natively (no build step); import with `.ts` extensions.
+*   **Verify:** `npm test`, plus a stdio smoke test (`initialize`, `tools/list`, `tools/call`).
