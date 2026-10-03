@@ -9,7 +9,7 @@
     "node": ">=22.18.0"
   },
   "bin": {
-    "switchboard-mcp": "src/server.ts"
+    "switchboard-mcp": "bin/switchboard-mcp.sh"
   },
   "scripts": {
     "start": "node src/server.ts",
