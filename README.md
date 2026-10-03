@@ -12,7 +12,7 @@ Switchboard policy (`~/.config/switchboard/policy.json`, or `$SWITCHBOARD_POLICY
 ```sh
 npm install
 export JEV_API_KEY=...   # or TYPESAFE_API_KEY, or SWITCHBOARD_PROVIDER + a provider key
-claude mcp add switchboard -- node /Users/johnjosef/Projects/switchboard-mcp/src/server.ts
+claude mcp add --scope user switchboard -- /Users/johnjosef/Projects/switchboard-mcp/bin/switchboard-mcp.sh
 ```
 
 Tell the agent to use it (e.g. in `CLAUDE.md`): "Before spawning a non-trivial subagent, call
