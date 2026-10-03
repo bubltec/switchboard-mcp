@@ -3,7 +3,7 @@ import { homedir } from 'node:os';
 import { join } from 'node:path';
 import {
   bundledCatalog, createConfiguredClassifier, defaultPolicy, mergePolicy,
-  assessInitialRoute, type Classification, type Policy,
+  assessInitialRoute, type Classification, type Classifier, type Policy,
 } from '@ruban24/switchboard';
 
 export interface Route {
@@ -18,11 +18,11 @@ export interface Route {
   classifierError?: string;
 }
 
-const POLICY_PATH = process.env.SWITCHBOARD_POLICY || join(homedir(), '.config', 'switchboard', 'policy.json');
+const policyPath = () => process.env.SWITCHBOARD_POLICY || join(homedir(), '.config', 'switchboard', 'policy.json');
 
 export async function loadPolicy(): Promise<Policy> {
   try {
-    return mergePolicy(defaultPolicy, JSON.parse(await readFile(POLICY_PATH, 'utf8')));
+    return mergePolicy(defaultPolicy, JSON.parse(await readFile(policyPath(), 'utf8')));
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') return defaultPolicy;
     throw error;
@@ -36,10 +36,15 @@ export function aliasFor(model: string): string {
   return model;
 }
 
-export async function routeTask(task: string): Promise<Route> {
-  const policy = await loadPolicy();
+export interface RouteDeps {
+  policy?: Policy;
+  classify?: Classifier;
+}
+
+export async function routeTask(task: string, deps: RouteDeps = {}): Promise<Route> {
+  const policy = deps.policy ?? await loadPolicy();
   const catalog = bundledCatalog;
-  const classify = createConfiguredClassifier();
+  const classify = deps.classify ?? createConfiguredClassifier();
   let classification: Classification | null = null;
   let classifierError: string | undefined;
   try {
