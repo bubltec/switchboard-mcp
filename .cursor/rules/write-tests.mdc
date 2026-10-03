@@ -1,0 +1,26 @@
+---
+description: Every code change ships with tests; how to choose and run them
+alwaysApply: true
+---
+
+# Write tests for code
+
+Any change to behaviour comes with tests in the same change. This applies to
+features, bug fixes, refactors and generated code alike. "It runs" and "I tried it"
+are not tests.
+
+*   **New behaviour:** a test that fails without the change. A bug fix starts with a
+    test that reproduces the bug.
+*   **Refactors:** keep the existing tests green, and add tests for any behaviour you
+    touched or now rely on that they didn't cover.
+*   **Cover the unhappy paths:** classifier failure or timeout (fallback to policy default),
+    missing API key, invalid or missing policy file, unknown model IDs.
+*   **Test at the layer that owns the rule.** Routing and alias mapping in `src/route.ts`;
+    tool wiring and error shape in `src/server.ts` (drive it over stdio or an in-memory transport).
+*   **Use `node --test`** (`npm test`). Inject a fake classifier; no network and no real keys.
+    Tests must pass offline.
+*   **Docs, types and config-only changes** don't need new tests, but say so in the summary.
+*   **If you can't test it,** say what is untested and why. Don't leave it out silently.
+
+Before calling work done, run `npm test` and report the result honestly: failures
+included, skipped steps named.
