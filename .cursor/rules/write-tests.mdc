@@ -16,9 +16,14 @@ are not tests.
 *   **Cover the unhappy paths:** classifier failure or timeout (fallback to policy default),
     missing API key, invalid or missing policy file, unknown model IDs.
 *   **Test at the layer that owns the rule.** Routing and alias mapping in `src/route.ts`;
-    tool wiring and error shape in `src/server.ts` (drive it over stdio or an in-memory transport).
+    tool wiring and error shape in `src/tool.ts` (in-memory MCP transport with an injected `route`);
+    `src/server.ts` gets only a stdio smoke test.
 *   **Use `node --test`** (`npm test`). Inject a fake classifier; no network and no real keys.
     Tests must pass offline.
+*   **Coverage is enforced.** `npm test` runs with coverage and fails below 90% on lines, branches and
+    functions (flags in `package.json`); CI runs it and the `check` status is required to merge. Never lower
+    the threshold or widen an exclude to get green: write the test. The only exclude is the process entry
+    point `src/server.ts`, which must stay a thin wrapper around `createServer` in `src/tool.ts`.
 *   **Docs, types and config-only changes** don't need new tests, but say so in the summary.
 *   **If you can't test it,** say what is untested and why. Don't leave it out silently.
 

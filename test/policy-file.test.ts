@@ -21,6 +21,6 @@ test('loadPolicy rejects a malformed policy file', async () => {
   const file = join(dir, 'bad.json');
   await writeFile(file, '{not json');
   process.env.SWITCHBOARD_POLICY = file;
-  const { loadPolicy } = await import('../src/route.ts?bad');
+  const { loadPolicy } = await import('../src/route.ts');
   await assert.rejects(loadPolicy());
 });

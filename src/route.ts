@@ -18,11 +18,11 @@ export interface Route {
   classifierError?: string;
 }
 
-const POLICY_PATH = process.env.SWITCHBOARD_POLICY || join(homedir(), '.config', 'switchboard', 'policy.json');
+const policyPath = () => process.env.SWITCHBOARD_POLICY || join(homedir(), '.config', 'switchboard', 'policy.json');
 
 export async function loadPolicy(): Promise<Policy> {
   try {
-    return mergePolicy(defaultPolicy, JSON.parse(await readFile(POLICY_PATH, 'utf8')));
+    return mergePolicy(defaultPolicy, JSON.parse(await readFile(policyPath(), 'utf8')));
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') return defaultPolicy;
     throw error;
