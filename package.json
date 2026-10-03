@@ -1,0 +1,23 @@
+{
+  "name": "switchboard-mcp",
+  "version": "0.1.0",
+  "description": "Local stdio MCP server exposing Switchboard model/effort routing to agents",
+  "type": "module",
+  "license": "Apache-2.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "bin": {
+    "switchboard-mcp": "src/server.ts"
+  },
+  "scripts": {
+    "start": "node src/server.ts",
+    "test": "node --test test/*.test.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.0",
+    "@ruban24/switchboard": "^0.2.0",
+    "zod": "^4.6.5"
+  }
+}
